@@ -1,3 +1,6 @@
+NAMA : AKMAL PRASETYO
+NIM : 20240140217
+# Notes SEMUA SS DI FILE (tugas.md)
 # Secure Search App — SQL Injection, XSS, Validasi, Sanitasi, Escape HTML
 
 Login + search produk, fokus materi keamanan web dasar. Ada **hub demo (`/demo`)**
