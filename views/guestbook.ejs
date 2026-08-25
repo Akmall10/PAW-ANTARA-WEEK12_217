@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buku Tamu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white border-b border-gray-200 py-4 px-6 mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-gray-800">📖 Buku Tamu</h1>
+      <p class="text-sm text-gray-500">
+        Halo, <%= username %> 👋 —
+        <a href="/demo" class="text-blue-600 underline">&larr; balik ke hub demo</a>
+      </p>
+    </div>
+    <form method="POST" action="/logout">
+      <button class="text-sm text-red-600 font-medium">Logout</button>
+    </form>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 pb-16">
+    <div class="bg-blue-50 border border-blue-200 text-blue-800 text-xs rounded-lg px-3 py-2 mb-6">
+      🛡️ Halaman ini implementasi mandiri Bagian 2 — sudah tervalidasi, tersanitasi,
+      di-escape saat render, dan pakai parameterized query. Coba isi form dengan
+      payload SQL Injection / XSS, hasilnya gak akan tembus.
+    </div>
+
+    <% if (success) { %>
+      <div class="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-3 py-2 mb-4">
+        Pesan berhasil dikirim, makasih! 🙌
+      </div>
+    <% } %>
+
+    <% if (errors && errors.length > 0) { %>
+      <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-4">
+        <p class="font-semibold mb-1">Gagal kirim, ada yang perlu diperbaiki:</p>
+        <ul class="list-disc list-inside">
+          <!-- pake <%= %> - pesan error ditampilin sebagai teks biasa -->
+          <% errors.forEach(function(err) { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form method="POST" action="/guestbook" class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-3 mb-8">
+      <div>
+        <label class="text-sm text-gray-600 block mb-1">Nama</label>
+        <input
+          type="text"
+          name="name"
+          value="<%= old.name %>"
+          maxlength="40"
+          placeholder="Nama kamu (huruf/angka, 2-40 karakter)"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+      <div>
+        <label class="text-sm text-gray-600 block mb-1">Pesan</label>
+        <textarea
+          name="message"
+          rows="3"
+          maxlength="300"
+          placeholder="Tulis pesan (3-300 karakter). Coba juga payload aneh-aneh, dijamin aman 😉"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ><%= old.message %></textarea>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-sm">
+        Kirim
+      </button>
+    </form>
+
+    <h2 class="text-sm font-semibold text-gray-600 mb-3">
+      Pesan masuk (<%= comments.length %>)
+    </h2>
+
+    <% if (comments.length === 0) { %>
+      <p class="text-center text-gray-400 py-8">Belum ada pesan, jadi yang pertama yuk!</p>
+    <% } %>
+
+    <div class="space-y-3">
+      <% comments.forEach(function(comment) { %>
+        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+          <!--
+            🛡️ DITANGANI DI SINI - topik #3: Escape HTML.
+            Pake <%= %> (BUKAN <%- %>). Kalo comment.name atau
+            comment.message isinya <script>alert(1)</script>, EJS
+            otomatis ubah jadi &lt;script&gt;alert(1)&lt;/script&gt;
+            pas dikirim ke browser - tampil sebagai TEKS biasa, gak
+            keeksekusi jadi script beneran.
+          -->
+          <p class="font-semibold text-gray-800 text-sm mb-1"><%= comment.name %></p>
+          <p class="text-sm text-gray-600 whitespace-pre-wrap"><%= comment.message %></p>
+          <p class="text-xs text-gray-400 mt-2">
+            <%= new Date(comment.createdAt).toLocaleString('id-ID') %>
+          </p>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+</body>
+</html>

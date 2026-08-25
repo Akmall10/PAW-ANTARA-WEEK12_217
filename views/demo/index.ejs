@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Keamanan Web</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white border-b border-gray-200 py-4 px-6 mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-gray-800">Demo Keamanan Web</h1>
+      <p class="text-sm text-gray-500">Halo, <%= username %> 👋 — <a href="/search" class="text-blue-600 underline">ke halaman search produk</a></p>
+    </div>
+    <form method="POST" action="/logout">
+      <button class="text-sm text-red-600 font-medium">Logout</button>
+    </form>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4">
+    <% if (!vulnDemoEnabled) { %>
+      <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm rounded-lg px-4 py-3 mb-6">
+        <strong>ℹ️ Demo Escape HTML, SQL Injection, dan XSS lagi DINONAKTIFIN.</strong>
+        Set <code>ENABLE_VULN_DEMO=true</code> di <code>.env</code> terus restart server buat aktifin
+        (cuma buat belajar di laptop lokal, jangan di server publik).
+      </div>
+    <% } %>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <a href="/demo/validasi-server-side" class="block bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">✅</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full bg-green-100 text-green-700">Selalu Aktif</span>
+        </div>
+        <h2 class="font-semibold text-gray-800 mb-1">1. Validasi Input Server-Side</h2>
+        <p class="text-sm text-gray-500">Coba submit data gak valid, liat gimana server nolaknya.</p>
+      </a>
+
+      <a href="/demo/sanitasi" class="block bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">🧹</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full bg-green-100 text-green-700">Selalu Aktif</span>
+        </div>
+        <h2 class="font-semibold text-gray-800 mb-1">2. Sanitasi Input</h2>
+        <p class="text-sm text-gray-500">Liat perbandingan input SEBELUM vs SESUDAH disanitasi.</p>
+      </a>
+
+      <a href="/demo/escape-html" class="block bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">🔒</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full <%= vulnDemoEnabled ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-500' %>">
+            <%= vulnDemoEnabled ? 'Demo Aktif' : 'Dinonaktifin' %>
+          </span>
+        </div>
+        <h2 class="font-semibold text-gray-800 mb-1">3. Escape HTML</h2>
+        <p class="text-sm text-gray-500">Bandingin <code>&lt;%= %&gt;</code> vs <code>&lt;%- %&gt;</code> di EJS.</p>
+      </a>
+
+      <a href="/demo/sql-injection" class="block bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">💉</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full <%= vulnDemoEnabled ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-500' %>">
+            <%= vulnDemoEnabled ? 'Demo Aktif' : 'Dinonaktifin' %>
+          </span>
+        </div>
+        <h2 class="font-semibold text-gray-800 mb-1">4. SQL Injection</h2>
+        <p class="text-sm text-gray-500">Bandingin query parameterized vs string SQL nyambung manual.</p>
+      </a>
+
+      <a href="/demo/xss" class="block bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow sm:col-span-2">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">⚡</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full <%= vulnDemoEnabled ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-500' %>">
+            <%= vulnDemoEnabled ? 'Demo Aktif' : 'Dinonaktifin' %>
+          </span>
+        </div>
+        <h2 class="font-semibold text-gray-800 mb-1">5. XSS (Cross-Site Scripting)</h2>
+        <p class="text-sm text-gray-500">Coba masukin payload <code>&lt;script&gt;</code>, liat bedanya kena vs enggak.</p>
+      </a>
+
+      <a href="/guestbook" class="block bg-white border border-blue-300 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow sm:col-span-2">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">📖</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700">Bagian 2 - Implementasi Saya</span>
+        </div>
+        <h2 class="font-semibold text-gray-800 mb-1">Buku Tamu (Guestbook)</h2>
+        <p class="text-sm text-gray-500">Halaman buatan sendiri: aman dari kelima celah keamanan di tugas ini.</p>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

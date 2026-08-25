@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Dinonaktifin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <%- include('../partials/demo-nav', { title: 'Demo Dinonaktifin' }) %>
+
+  <main class="max-w-xl mx-auto px-4">
+    <div class="bg-white border border-gray-200 rounded-xl p-6 text-center">
+      <div class="text-4xl mb-3">🔒</div>
+      <h2 class="font-semibold text-gray-800 mb-2">Halaman <code><%= path %></code> lagi dinonaktifin</h2>
+      <p class="text-sm text-gray-500 mb-4">
+        Route ini sengaja nunjukin behavior rentan (buat belajar), jadi
+        DIMATIIN SECARA DEFAULT biar aman kalo project ini kepasang di
+        production.
+      </p>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-left text-sm text-gray-600">
+        Buat aktifin (cuma di laptop lokal buat belajar):
+        <ol class="list-decimal list-inside mt-2 space-y-1">
+          <li>Buka file <code>.env</code></li>
+          <li>Set <code>ENABLE_VULN_DEMO=true</code></li>
+          <li>Restart server (<code>npm run dev</code>)</li>
+        </ol>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

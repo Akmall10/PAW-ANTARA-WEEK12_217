@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Sanitasi Input</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <%- include('../partials/demo-nav', { title: '2. Sanitasi Input' }) %>
+
+  <main class="max-w-xl mx-auto px-4 pb-10">
+    <div class="bg-blue-50 border border-blue-200 text-blue-800 text-sm rounded-lg px-4 py-3 mb-6">
+      Beda sama validasi (yang NOLAK data gak sesuai aturan), sanitasi itu
+      NGUBAH input jadi bentuk aman/rapi — walau inputnya "valid" secara aturan.
+      Coba ketik teks pake spasi di depan/belakang, atau simbol HTML kayak
+      <code>&lt;b&gt;tes&lt;/b&gt;</code>, terus liat hasil "sesudah"-nya.
+    </div>
+
+    <% if (before) { %>
+      <div class="grid grid-cols-1 gap-3 mb-6">
+        <div class="bg-white border border-gray-200 rounded-xl p-4">
+          <p class="text-xs font-semibold text-gray-400 mb-1">SEBELUM disanitasi (raw dari form)</p>
+          <pre class="text-sm bg-gray-50 rounded p-2 overflow-x-auto"><%= JSON.stringify(before, null, 2) %></pre>
+        </div>
+        <div class="bg-white border border-green-200 rounded-xl p-4">
+          <p class="text-xs font-semibold text-green-600 mb-1">SESUDAH disanitasi (yang beneran masuk ke req.body controller)</p>
+          <pre class="text-sm bg-green-50 rounded p-2 overflow-x-auto"><%= JSON.stringify(after, null, 2) %></pre>
+        </div>
+      </div>
+    <% } %>
+
+    <form method="POST" action="/demo/sanitasi" class="bg-white border border-gray-200 rounded-xl p-5 space-y-3">
+      <div>
+        <label class="text-sm text-gray-600 block mb-1">Teks bebas (coba " &lt;b&gt;tes&lt;/b&gt; " pake spasi)</label>
+        <input type="text" name="teks" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        <p class="text-xs text-gray-400 mt-1">Aturan: <code>.trim().escape()</code></p>
+      </div>
+      <div>
+        <label class="text-sm text-gray-600 block mb-1">Email (coba "Budi.Santoso+promo@GMAIL.com")</label>
+        <input type="text" name="email_input" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        <p class="text-xs text-gray-400 mt-1">Aturan: <code>.trim().normalizeEmail()</code></p>
+      </div>
+      <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-sm">
+        Sanitasi sekarang
+      </button>
+    </form>
+
+    <p class="text-xs text-gray-400 mt-4">
+      Aturan lengkap ada di <code>middlewares/validators.js</code> →
+      <code>sanitasiDemoRules</code>.
+    </p>
+  </main>
+</body>
+</html>

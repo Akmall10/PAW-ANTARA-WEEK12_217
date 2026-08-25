@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cari Produk</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white border-b border-gray-200 py-4 px-6 mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-gray-800">Cari Produk</h1>
+      <p class="text-sm text-gray-500">Halo, <%= username %> 👋</p>
+    </div>
+    <form method="POST" action="/logout">
+      <button class="text-sm text-red-600 font-medium">Logout</button>
+    </form>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4">
+    <form method="GET" action="/search" class="flex gap-2 mb-6">
+      <input
+        type="text"
+        name="q"
+        value="<%= query %>"
+        placeholder="Cari nama atau deskripsi produk..."
+        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        Cari
+      </button>
+    </form>
+
+    <% if (searched) { %>
+      <!--
+        PENTING: pake <%= %> di sini, BUKAN <%- %>. Kalo user ketik
+        <script>alert(1)</script> di kotak pencarian, yang tampil di
+        browser ya teks "<script>alert(1)</script>" biasa (udah di-escape
+        jadi &lt;script&gt;), bukan malah keeksekusi.
+      -->
+      <p class="text-sm text-gray-500 mb-4">
+        Hasil pencarian untuk: <span class="font-medium text-gray-700"><%= query %></span>
+        (<%= products.length %> produk)
+      </p>
+    <% } %>
+
+    <% if (searched && products.length === 0) { %>
+      <p class="text-center text-gray-400 py-8">Gak ada produk yang cocok</p>
+    <% } %>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <% products.forEach(function(product) { %>
+        <%- include('partials/product-card', { product }) %>
+      <% }) %>
+    </div>
+  </main>
+</body>
+</html>

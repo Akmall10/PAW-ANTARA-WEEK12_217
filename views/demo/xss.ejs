@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚠️ Demo XSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-red-50 min-h-screen">
+  <div class="bg-red-600 text-white text-center text-sm font-semibold py-2 px-4">
+    ⚠️ HALAMAN INI SENGAJA RENTAN XSS, buat demo materi. JANGAN dipake di production.
+  </div>
+  <%- include('../partials/demo-nav', { title: '5. XSS (Cross-Site Scripting)' }) %>
+
+  <main class="max-w-xl mx-auto px-4 pb-10">
+    <div class="bg-blue-50 border border-blue-200 text-blue-800 text-sm rounded-lg px-4 py-3 mb-6">
+      <p class="mb-2"><strong>Reflected XSS</strong> — coba payload ini di kotak bawah:</p>
+      <code class="block bg-white/60 rounded p-2 mb-2 text-xs break-all">&lt;script&gt;alert('XSS dari ' + document.cookie)&lt;/script&gt;</code>
+      <p class="text-xs">
+        Kalo beneran nge-alert, itu artinya script asing bisa baca <code>document.cookie</code>
+        punya user — di dunia nyata, ini dipake buat nyolong session/cookie login orang lain.
+      </p>
+    </div>
+
+    <form method="GET" action="/demo/xss" class="flex gap-2 mb-6">
+      <input
+        type="text"
+        name="input"
+        value="<%= input %>"
+        placeholder="<script>alert('XSS')</script>"
+        class="flex-1 border border-red-300 rounded-lg px-3 py-2 text-sm"
+      />
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">Kirim</button>
+    </form>
+
+    <% if (submitted) { %>
+      <div class="bg-white border border-red-300 rounded-xl p-4 mb-6">
+        <p class="text-xs font-semibold text-red-600 mb-2">Hasil di-render (unescaped):</p>
+        <div class="border border-dashed border-red-300 rounded p-3 text-sm">
+          <%- input %>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="bg-white border border-gray-200 rounded-xl p-4">
+      <p class="text-sm font-semibold text-gray-700 mb-2">Bonus: Stored XSS</p>
+      <p class="text-xs text-gray-500 mb-3">
+        Buka <a href="/search-unsafe-demo" class="text-blue-600 underline">/search-unsafe-demo</a>
+        terus search produk apa aja (biar semua produk kekumpul) — ada 1 produk dari seeder
+        yang NAMANYA sendiri isi payload <code>&lt;script&gt;</code>. Bedanya sama reflected:
+        payload ini udah "nempel" di database, jadi ke-trigger ke SEMUA orang yang buka
+        halaman itu, bukan cuma yang ngetik payload-nya.
+      </p>
+    </div>
+
+    <p class="text-xs text-gray-400 mt-6">
+      Kode lengkap: <code>controllers/demo.unsafe.controller.js</code> (<code>xssDemo</code>) +
+      <code>seeders/seed.js</code> (produk demo stored XSS).
+    </p>
+  </main>
+</body>
+</html>
